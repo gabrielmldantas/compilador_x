@@ -1,0 +1,86 @@
+Package br.com.ufs.xcompiler;
+
+Helpers 
+    digito = ['0' .. '9'];
+    letra = ['a' .. 'z'] | ['A' .. 'Z']; 
+    tab = 9;
+    cr = 13;
+    lf = 10;
+    eol = cr lf | cr | lf;
+    blank = (' ' | tab | eol)+;
+    all = [0 .. 0xFF];
+    not_line_break = [all - [cr + lf]];
+    not_star = [all - '*'];
+    not_star_slash = [not_star - '/'];
+    ponto_virgula = ';';
+    underline = '_';
+
+	int = 'int';
+	real = 'real';
+	bool = 'bool';
+	true = 'true';
+	false = 'false';
+	while = 'while';
+	if = 'if';
+	then = 'then';
+	else = 'else';
+	procedure = 'procedure';
+	function = 'function';
+	cons = 'cons';
+	var = 'var';
+    
+    coment_linha = '//' not_line_break* eol;
+    ini_coment_bloco = '/*';
+    
+States
+	normal,
+	comment;
+
+Tokens
+{normal}	blank = blank;
+{normal}	int = int;
+{normal}	real = real;
+{normal}	bool = bool;
+{normal}	true = true;
+{normal}	false = false;
+{normal}	if = if;
+{normal}	then = then;
+{normal}	else = else;
+{normal}	while = while;
+{normal}	procedure = procedure;
+{normal}	function = function;
+{normal}	cons = cons;
+{normal}	var = var;
+{normal}	num = '0x' digito+ | digito+ '.' digito+ | digito+ 'e' digito+ | digito+ 'e-' digito+ | digito+;
+{normal}	id = letra (letra | digito | underline)*;
+{normal}	ponto_virgula = ponto_virgula;
+{normal}	virgula = ',';
+{normal}	ini_parentese = '(';
+{normal}	fim_parentese = ')';
+{normal}	ini_chave = '{';
+{normal}	fim_chave = '}';
+{normal}	ini_colchete = '[';
+{normal}	fim_colchete = ']';
+{normal}	soma = '+';
+{normal}	subtr = '-';
+{normal}	mult = '*';
+{normal}	div = '/';
+{normal}	mod = '%';
+{normal}	equal = '=';
+{normal}	menor = '<';
+{normal}	not = '!';
+{normal}	and = 'and';
+{normal}	or = 'or';
+{normal}	atrib = ':=';
+{normal}	pipe = '|';
+{normal}	coment_linha = coment_linha;
+{normal->comment, comment}    coment_bloco = ini_coment_bloco;
+{comment, normal} fim_coment_bloco = '*/';
+{comment} corpo_coment_bloco = not_star_slash*;
+{comment} star = '*';
+{comment} slash = '/';
+	
+Ignored Tokens
+	blank,
+	coment_linha,
+	coment_bloco;
